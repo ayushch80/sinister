@@ -16,6 +16,7 @@ Hides code with tricks 💀
 - [ ] Flow Flattening  
 - [ ] Code Injection  
 - [ ] String Obfuscation  
+- [ ] Anti Debugging
 
 ---
 

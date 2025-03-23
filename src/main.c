@@ -1,8 +1,7 @@
 #include <stdio.h>
-#include <stdlib.h>
 #include <argp.h>
 
-#include "../include/utils.h"
+#include "../include/obfuscator.h"
 
 const char *argp_program_version = "Sinister 1.0";
 const char *argp_program_bug_address = "<ayushch80@gmail.com>";
@@ -52,10 +51,6 @@ int main(int argc, char **argv)
     {
         fprintf(stderr, "Error: Missing input file. Use -i or --input.\n");
         return 1;
-    } else {
-        // Checks if the file exists
-        char *input_file = readfile(arguments.input);
-        free(input_file);
     }
     if (!arguments.output)
     {
@@ -63,10 +58,10 @@ int main(int argc, char **argv)
         return 1;
     }
 
-    
+    // printf("[*] Input File: %s\n", arguments.input);
+    // printf("[*] Output File: %s\n", arguments.output);
 
-    printf("[*] Input File: %s\n", arguments.input);
-    printf("[*] Output File: %s\n", arguments.output);
+    obfuscate(arguments.input, arguments.output);
 
     return 0;
 }
