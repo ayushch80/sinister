@@ -98,7 +98,7 @@ bool isSupportedELF(char *filepath)
         exit(EXIT_FAILURE);
     }
 
-    if (ehdr.e_machine != 0x02)
+    if (ehdr.e_ident[EI_CLASS] == ELFCLASS32)
     {
         fprintf(stderr, "32-bit ELF isn't supported yet\n");
         close(fd);
