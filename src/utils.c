@@ -98,9 +98,18 @@ bool isSupportedELF(char *filepath)
         exit(EXIT_FAILURE);
     }
 
+    // check if it's a 64-bit ELF
     if (ehdr.e_ident[EI_CLASS] == ELFCLASS32)
     {
         fprintf(stderr, "32-bit ELF isn't supported yet\n");
+        close(fd);
+        exit(EXIT_FAILURE);
+    }
+
+    // check if it's a little-endian ELF
+    if (ehdr.e_ident[EI_DATA] != ELFDATA2LSB)
+    {
+        fprintf(stderr, "Big-endian ELF isn't supported yet\n");
         close(fd);
         exit(EXIT_FAILURE);
     }

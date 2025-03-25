@@ -24,7 +24,13 @@ extern "C"
     char *getClass(char *buffer);
     char *getData(char *buffer);
     char *getVersion(char *buffer);
-
+    char *getOSABI(char *buffer);
+    char *getABIVersion(char *buffer);
+    char *getType(char *buffer);
+    char *getMachine(char *buffer);
+    char *getEntrypoint(char *buffer);
+    char *getPHOffset(char *buffer);
+    char *getSHOffest(char *buffer);
 
 #ifdef __cplusplus
 }
