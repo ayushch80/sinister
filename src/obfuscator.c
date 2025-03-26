@@ -12,7 +12,8 @@ void obfuscate(char *input_filename, char *output_filename)
         return;
     }
 
-    char *input_buffer = readfile(input_filename);
+    Buffer input = readfile(input_filename);
+    char *input_buffer = input.buffer;
 
     {
         printf("ELF HEADER\n");
@@ -27,6 +28,18 @@ void obfuscate(char *input_filename, char *output_filename)
         printf(" Entry point address: %s\n", getEntrypoint(input_buffer));
         printf(" Program headers offset: %s\n", getPHOffset(input_buffer));
         printf(" Section headers offest: %s\n", getSHOffest(input_buffer));
+    }
+
+    Buffer output = input;
+    if (!writefile(output_filename, output))
+    {
+        fprintf(stderr, "Error: Unable to save %s\n", output_filename);
+        free(input_buffer);
+        exit(EXIT_FAILURE);
+    }
+    else
+    {
+        printf("\nSaved %s\n", output_filename);
     }
 
     free(input_buffer);

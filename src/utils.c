@@ -6,9 +6,10 @@
 
 #include "../include/utils.h"
 
-char *readfile(const char *filepath)
+Buffer readfile(const char *filepath)
 {
     struct stat st;
+    Buffer res;
 
     if (stat(filepath, &st) != 0)
     {
@@ -50,7 +51,27 @@ char *readfile(const char *filepath)
         exit(EXIT_FAILURE);
     }
 
-    return buffer;
+    res.buffer = buffer;
+    res.size = bytesRead;
+
+    return res;
+}
+
+bool writefile(const char *filepath, const Buffer buffer)
+{
+    FILE *file;
+    file = fopen(filepath, "wb");
+
+    if (!file)
+    {
+        return false;
+    }
+
+    // fprintf(file, buffer);
+    fwrite(buffer.buffer, sizeof(buffer.buffer[0]), buffer.size, file);
+    fclose(file);
+
+    return true;
 }
 
 uint64_t read_le_address(char *buffer, int index, int size)

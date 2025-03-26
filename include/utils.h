@@ -14,8 +14,15 @@ extern "C"
 #include <gelf.h>
 #include <stdarg.h>
 
+    typedef struct
+    {
+        char *buffer;
+        size_t size;
+    } Buffer;
+
     // utils.c
-    char *readfile(const char *filepath);
+    Buffer readfile(const char *filepath);
+    bool writefile(const char *filepath, const Buffer buffer);
     uint64_t read_le_address(char *buffer, int index, int size);
     bool isSupportedELF(char *filepath);
 
@@ -36,7 +43,7 @@ extern "C"
 }
 
 // utils.cpp
-char *stringToCString (std::string str);
+char *stringToCString(std::string str);
 std::string formatString(const char *fmt, ...);
 
 #endif
