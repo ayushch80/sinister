@@ -1,8 +1,67 @@
+#include <iostream>
 #include <cstring>
+#include <cstdarg>
+#include <fstream>
 
-#include "../include/utils.h"
+#include "../include/utils.hpp"
 
-char *getMagic(char *buffer)
+Buffer readfile(std::string filepath)
+{
+    std::ifstream file(filepath, std::ios::binary);
+    Buffer res;
+
+    if (!file)
+    {
+        std::cerr << "Error opening file: " << filepath << std::endl;
+        exit(1);
+    }
+
+    size_t filesize = 0;
+    file.seekg(0, std::ios::end);
+    filesize = file.tellg();
+
+    char *buffer = new char[filesize];
+    file.seekg(0, std::ios::beg);
+    file.read(buffer, filesize);
+    if (!file)
+    {
+        std::cerr << "Error reading file: " << filepath << std::endl;
+        delete[] buffer;
+        exit(1);
+    }
+    file.close();
+
+    res.buffer = buffer;
+    res.size = filesize;
+
+    return res;
+}
+
+bool writefile(std::string filepath, Buffer buffer)
+{
+    std::ofstream file(filepath, std::ios::binary);
+    if (!file)
+    {
+        std::cerr << "Error opening file for writing: " << filepath << std::endl;
+        return false;
+    }
+
+    file.write(buffer.buffer, buffer.size);
+    if (!file)
+    {
+        std::cerr << "Error writing to file: " << filepath << std::endl;
+        return false;
+    }
+
+    file.close();
+
+    return true;
+}
+
+/// @brief
+/// @param buffer Buffer to read from
+/// @return Magic number of the ELF file
+std::string getMagic(char *buffer)
 {
     std::string magic = "";
 
@@ -11,28 +70,40 @@ char *getMagic(char *buffer)
         magic += formatString("%.2x ", buffer[i]);
     }
 
-    return stringToCString(magic);
+    return magic;
 }
 
-char *getClass(char *buffer)
+/// @brief
+/// @param buffer Buffer to read from
+/// @return Class of the ELF file
+std::string getClass(char *buffer)
 {
     std::string className = (buffer[4] == 1) ? "32-bit" : "64-bit";
-    return stringToCString(className);
+    return className;
 }
 
-char *getData(char *buffer)
+/// @brief
+/// @param buffer Buffer to read from
+/// @return
+std::string getData(char *buffer)
 {
     std::string dataName = (buffer[5] == 1) ? "Little-endian" : "Big-endian";
-    return stringToCString(dataName);
+    return dataName;
 }
 
-char *getVersion(char *buffer)
+/// @brief
+/// @param buffer Buffer to read from
+/// @return
+std::string getVersion(char *buffer)
 {
     std::string version = formatString("%d", buffer[6]);
-    return stringToCString(version);
+    return version;
 }
 
-char *getOSABI(char *buffer)
+/// @brief
+/// @param buffer Buffer to read from
+/// @return
+std::string getOSABI(char *buffer)
 {
     int osabi = buffer[7];
     std::string osabiName = "";
@@ -96,16 +167,22 @@ char *getOSABI(char *buffer)
         osabiName = "Unknown";
         break;
     }
-    return stringToCString(osabiName);
+    return osabiName;
 }
 
-char *getABIVersion(char *buffer)
+/// @brief
+/// @param buffer Buffer to read from
+/// @return
+std::string getABIVersion(char *buffer)
 {
     std::string abiversion = formatString("%d", buffer[8]);
-    return stringToCString(abiversion);
+    return abiversion;
 }
 
-char *getType(char *buffer)
+/// @brief
+/// @param buffer Buffer to read from
+/// @return
+std::string getType(char *buffer)
 {
     int type = read_le_address(buffer, 0x10, 2);
     std::string typeName = "";
@@ -144,10 +221,13 @@ char *getType(char *buffer)
         break;
     }
 
-    return stringToCString(typeName);
+    return typeName;
 }
 
-char *getMachine(char *buffer)
+/// @brief
+/// @param buffer Buffer to read from
+/// @return
+std::string getMachine(char *buffer)
 {
     int value = read_le_address(buffer, 0x12, 2);
     std::string isa = "";
@@ -414,32 +494,40 @@ char *getMachine(char *buffer)
         break;
     }
 
-    return stringToCString(isa);
+    return isa;
 }
 
-char *getEntrypoint(char *buffer) {
+/// @brief
+/// @param buffer Buffer to read from
+/// @return
+std::string getEntrypoint(char *buffer)
+{
     int entrypoint = read_le_address(buffer, 0x18, 8);
     std::string entrypointStr = formatString("0x%lx", (long)entrypoint);
-    return stringToCString(entrypointStr);
+    return entrypointStr;
 }
 
-char *getPHOffset(char *buffer) {
-    std::string offset = formatString("0x%lx", read_le_address(buffer, 0x20, 8));
-    return stringToCString(offset);
-}
-
-char *getSHOffest(char *buffer) {
-    std::string offset = formatString("0x%lx", read_le_address(buffer, 0x28, 8));
-    return stringToCString(offset);
-}
-
-char *stringToCString(std::string str)
+/// @brief
+/// @param buffer Buffer to read from
+/// @return
+std::string getPHOffset(char *buffer)
 {
-    char *cstr = new char[str.length() + 1];
-    strcpy(cstr, str.c_str());
-    return cstr;
+    std::string offset = formatString("0x%lx", read_le_address(buffer, 0x20, 8));
+    return offset;
 }
 
+/// @brief
+/// @param buffer Buffer to read from
+/// @return
+std::string getSHOffest(char *buffer)
+{
+    std::string offset = formatString("0x%lx", read_le_address(buffer, 0x28, 8));
+    return offset;
+}
+
+/// @brief
+/// @param buffer Buffer to read from
+/// @return
 std::string formatString(const char *fmt, ...)
 {
     char buffer[256];
@@ -448,4 +536,19 @@ std::string formatString(const char *fmt, ...)
     std::vsnprintf(buffer, sizeof(buffer), fmt, args);
     va_end(args);
     return std::string(buffer);
+}
+
+/// @brief
+/// @param buffer
+/// @param index
+/// @param size
+/// @return
+uint64_t read_le_address(char *buffer, int index, int size)
+{
+    uint64_t address = 0;
+    for (int i = 0; i < size; i++)
+    {
+        address |= ((uint64_t)buffer[index + i] << (i * 8));
+    }
+    return address;
 }

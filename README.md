@@ -1,12 +1,13 @@
-# sinister  
-Hides code with tricks 💀  
+# sinister
+### Advanced Code Obfuscation Toolkit 💀
+Sinister is a tool designed to hide code using various obfuscation techniques, making reverse engineering significantly harder.
 
 ---
 
 ## ⚙️ **Features**
 
 ### ✅ **Completed**  
-- NONE 💀🔥  
+- Nothing yet... but soon! 💀 
 
 ### 🔥 **In Active Development**  
 - [x] Symbol Renaming  
@@ -20,5 +21,29 @@ Hides code with tricks 💀
 
 ---
 
+## Installation
+
+### 📥 Clone the Repository
+```bash
+git clone https://github.com/ayushch80/sinister.git
+cd sinister
+```
+
+### 📦 Install Dependencies
+```bash
+sudo apt-get install libelf-dev libcli11-dev
+```
+
+### ⚙️ Build
+```bash
+make
+```
+
+### 🚀 Run
+```bash
+./build/sinister
+```
+---
+
 ## ⚡ **LICENSE**  
-[Apache License Version 2.0](LICENSE)  
+Sinister is licensed under the [Apache License 2.0](LICENSE)  
