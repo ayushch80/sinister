@@ -24,13 +24,12 @@ int main(int argc, char **argv)
     arguments.output = output;
     arguments.verbose = verbose;
 
-    std::cout << "verbose : " << verbose << std::endl;
-
     if (verbose)
     {
         std::cout << "[+] Verbose mode enabled" << std::endl;
         std::cout << "[+] Input ELF : " << input << std::endl;
         std::cout << "[+] Output ELF : " << output << std::endl;
+        std::cout << std::endl;
     }
 
     obfuscate(arguments);

@@ -1,7 +1,7 @@
 CXX = g++
 
 CXXFLAGS = -Wall -Wextra -g -Ofast -std=c++17
-CXXSRC = src/main.cpp src/obfuscator.cpp src/utils.cpp
+CXXSRC = src/main.cpp src/obfuscator.cpp src/utils.cpp src/elf_utils.cpp
 
 INCLUDE = -Iinclude
 OUTPUT = build/sinister
