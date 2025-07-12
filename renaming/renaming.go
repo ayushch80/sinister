@@ -71,7 +71,7 @@ func RenameSymbols(filepath string, data *[]byte) {
 
 	symtab := BytesToSymtab(symtabData)
 
-	// Save STB_LOCAL - STT_GNU_IFUNC symbols in an array
+	// Save renamable symbols in an array
 	var goodSymbols []Symbol
 	for _, sym := range symtab.Symbols {
 		st_bind := elf.ST_BIND(sym.st_info)
@@ -79,6 +79,8 @@ func RenameSymbols(filepath string, data *[]byte) {
 
 		// Checks
 		if st_bind == elf.STB_LOCAL && st_type != elf.STT_GNU_IFUNC {
+			goodSymbols = append(goodSymbols, sym)
+		} else if st_bind == elf.STB_GLOBAL && (st_type == elf.STT_OBJECT || st_type == elf.STT_FUNC || st_type == elf.STT_NOTYPE) {
 			goodSymbols = append(goodSymbols, sym)
 		}
 	}

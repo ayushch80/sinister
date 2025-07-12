@@ -13,7 +13,7 @@
 ### 🔥 **In Active Development**
 - [x] **Symbol Renaming** *(Initial Support)*  
   🔹 Currently supports renaming of:  
-  &nbsp;&nbsp;&nbsp;&nbsp;• **All `STB_LOCAL` symbols**, except `STT_GNU_IFUNC`  
+  &nbsp;&nbsp;&nbsp;&nbsp;• **Nearly all `STB_LOCAL` and `STB_GLOBAL` symbols**
   ✔️ Renames safely within `.symtab` and `.strtab`  
   ❌ Does *not yet* handle `.dynsym`, relocations, or dynamic resolution (`dlsym`, plugins)
 
