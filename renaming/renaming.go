@@ -7,7 +7,7 @@ import (
 	"sinister/utils"
 )
 
-func BytesToSymtab(b []byte) SymbolTable {
+func bytesToSymtab(b []byte) SymbolTable {
 	symtab := SymbolTable{
 		Symbols: []Symbol{},
 	}
@@ -33,7 +33,7 @@ func BytesToSymtab(b []byte) SymbolTable {
 
 func RenameSymbols(filepath string, data *[]byte) {
 	// Read the file
-	fmt.Println("[+] Reading the file")
+	fmt.Println("[*] Reading the file")
 	ELF, err := elf.Open(filepath)
 	if err != nil {
 		log.Fatalf("[-] Failed while reading ELF file at : %s\n", filepath)
@@ -69,7 +69,7 @@ func RenameSymbols(filepath string, data *[]byte) {
 		strtabOffset = strtab.Offset
 	}
 
-	symtab := BytesToSymtab(symtabData)
+	symtab := bytesToSymtab(symtabData)
 
 	// Save renamable symbols in an array
 	var goodSymbols []Symbol

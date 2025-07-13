@@ -47,3 +47,24 @@ func BytesToUint8LE(b []byte) uint8 {
 	}
 	return uint8(b[0])
 }
+func Uint64ToBytesLE(v uint64) []byte {
+	b := make([]byte, 8)
+	binary.LittleEndian.PutUint64(b, v)
+	return b
+}
+
+func Uint32ToBytesLE(v uint32) []byte {
+	b := make([]byte, 4)
+	binary.LittleEndian.PutUint32(b, v)
+	return b
+}
+
+func Uint16ToBytesLE(v uint16) []byte {
+	b := make([]byte, 2)
+	binary.LittleEndian.PutUint16(b, v)
+	return b
+}
+
+func Uint8ToBytesLE(v uint8) []byte {
+	return []byte{v}
+}

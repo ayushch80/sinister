@@ -6,6 +6,7 @@ import (
 	"log"
 	"os"
 	"sinister/renaming"
+	"sinister/locking"
 )
 
 func main() {
@@ -15,10 +16,11 @@ func main() {
 	inpath := flag.String("in", "", "Path to input binary file")
 	outpath := flag.String("out", "", "Path to save renamed output file")
 	rename := flag.Bool("rename", false, "Enable symbol renaming")
+	lock := flag.Bool("lock", false, "Enable ELF locking")
 	flag.Parse()
 
 	if *inpath == "" || *outpath == "" {
-		fmt.Println("Usage: sinister -in <input_file> -out <output_file> [-rename]")
+		fmt.Println("Usage: sinister -in <input_file> -out <output_file> [-rename|-lock]")
 		flag.PrintDefaults()
 		os.Exit(1)
 	}
@@ -33,8 +35,14 @@ func main() {
 
 	// Do symbol renaming
 	if *rename {
-		fmt.Println("[*] Renaming symbols...")
+		fmt.Println("[+] Renaming symbols...")
 		renaming.RenameSymbols(*inpath, &inpData)
+	}
+
+	// Do ELF locking
+	if *lock {
+		fmt.Println("[+] Locking ELF...")
+		locking.LockBinary(*inpath, &inpData)
 	}
 
 	// Write modified binary with executable permissions
